@@ -1,22 +1,29 @@
+// Importing required modules and dependencies
 const express = require("express");
 const router = express.Router();
-const { placeOrder, getAllOrders, updateOrderStatus, cancelOrder, getCustomerOrders } = require("../controllers/order.controller");
-const { authenticateCustomer, authenticateSupplier } = require("../middlewares/auth.middleware.js"); // Correct imports
+const { 
+  placeOrder, 
+  getAllOrders, 
+  updateOrderStatus, 
+  cancelOrder, 
+  getCustomerOrders 
+} = require("../controllers/order.controller"); // Importing order-related controller functions
 
-// Place Order (Customer only)
+const { authenticateCustomer, authenticateSupplier } = require("../middlewares/auth.middleware.js"); // Middleware for authentication
+
+// ✅ Route for placing an order (Protected - Only customers can place orders)
 router.post("/", authenticateCustomer, placeOrder);
 
-// View All Orders (Supplier only)
+// ✅ Route to view all orders (Protected - Only suppliers can view all orders)
 router.get("/", authenticateSupplier, getAllOrders);
 
-// Update Order Status (Supplier only)
+// ✅ Route to update order status (Protected - Only suppliers can update order status)
 router.put("/:orderId/status", authenticateSupplier, updateOrderStatus);
 
-// Cancel Order (Customer only)
+// ✅ Route to cancel an order (Protected - Only customers can cancel their own orders)
 router.delete("/:orderId", authenticateCustomer, cancelOrder);
 
-// ✅ Get a particular customer's orders (Only for logged-in customers)
+// ✅ Route to fetch orders for a specific customer (Protected - Only logged-in customers can access their own orders)
 router.get("/customer", authenticateCustomer, getCustomerOrders);
 
-
-module.exports = router;
+module.exports = router; // Exporting the router for use in the main application

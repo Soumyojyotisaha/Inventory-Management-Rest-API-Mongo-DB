@@ -39,7 +39,7 @@ const placeOrder = async (req, res) => {
     const newOrder = new Order({
       customer: customerId,
       products: updatedProducts,
-      totalAmount,
+      totalAmount, // ✅ Save total amount
     });
 
     await newOrder.save();
@@ -49,6 +49,7 @@ const placeOrder = async (req, res) => {
       order: {
         _id: newOrder._id,
         products: newOrder.products,
+        totalAmount: newOrder.totalAmount, // ✅ Include total amount in response
         status: newOrder.status,
       },
     });
@@ -56,6 +57,7 @@ const placeOrder = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // ✅ View All Orders (For Suppliers)
 const getAllOrders = async (req, res) => {
@@ -94,7 +96,7 @@ const updateOrderStatus = async (req, res) => {
       { status },
       { new: true }
     ).populate({
-      path: "customer",
+      path: "customer", // ✅ Corrected: Use "customer" as per your schema
       select: "name email",
     });
 
@@ -103,13 +105,12 @@ const updateOrderStatus = async (req, res) => {
     }
 
     // ✅ Send Email Notification 📩
-    const customerEmail = updatedOrder.customer.email;
-    const customerName = updatedOrder.customer.name;
+    const { id, name, email } = updatedOrder.customer; // ✅ Corrected: Access using 'customer'
     const emailSubject = `Order Status Update: ${status}`;
     const emailBody = `
-      Dear ${customerName},
+      Dear ${name},
 
-      Your order (ID: ${orderId}) status has been updated to: ${status}.
+      Your order (Order ID: ${updatedOrder._id}) status has been updated to: ${status}.
 
       Thank you for choosing our service!
       
@@ -117,10 +118,12 @@ const updateOrderStatus = async (req, res) => {
       E-Commerce Team
     `;
 
-    await sendEmail(customerEmail, emailSubject, emailBody);
+    const emailSent = await sendEmail(email, emailSubject, emailBody);
 
     res.status(200).json({
-      message: "Order status updated & email notification sent",
+      message: emailSent
+        ? "Order status updated & email notification sent"
+        : "Order status updated, but email failed",
       order: updatedOrder,
     });
   } catch (error) {
@@ -132,34 +135,60 @@ const updateOrderStatus = async (req, res) => {
 const cancelOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
-    
+
     // Find the order
-    const order = await Order.findById(orderId);
+    const order = await Order.findById(orderId).populate({
+      path: "customer",
+      select: "name email",
+    });
+
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
 
     // Check if the order is already processed
     if (order.status !== "Pending") {
-      return res.status(400).json({ message: "Order cannot be canceled as it is already processed" });
+      return res
+        .status(400)
+        .json({ message: "Order cannot be canceled as it is already processed" });
     }
 
     // Restore stock for each product
     for (const item of order.products) {
       await Product.findByIdAndUpdate(item.product, {
-        $inc: { quantity: item.quantity } // Add back the stock
+        $inc: { quantity: item.quantity }, // Add back the stock
       });
     }
 
     // Delete the order
     await Order.findByIdAndDelete(orderId);
 
-    res.status(200).json({ message: "Order canceled successfully" });
+    // ✅ Send Email Notification 📩
+    const emailSubject = "Order Cancellation Confirmation";
+    const emailBody = `
+      Dear ${order.customer.name},
+
+      Your order (ID: ${orderId}) has been successfully canceled.
+
+      If you have any questions, feel free to contact us.
+
+      Regards,
+      E-Commerce Team
+    `;
+
+    const emailSent = await sendEmail(order.customer.email, emailSubject, emailBody);
+
+    res.status(200).json({
+      message: emailSent
+        ? "Order cancelled successfully & email notification sent"
+        : "Order cancelled successfully, but email failed",
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
+// ✅ get customer order details
 const getCustomerOrders = async (req, res) => {
   try {
     const customerId = req.customer.id; // Get customer ID from token

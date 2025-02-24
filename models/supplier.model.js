@@ -17,6 +17,17 @@ const SupplierSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please enter a password"],
     },
+    address: {
+      type: String,
+    },
+    resetPasswordToken: {
+      type: String,
+      default: null,
+    },
+    resetPasswordExpires: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
 );

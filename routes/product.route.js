@@ -1,29 +1,30 @@
+// Importing required modules
 const express = require("express");
 const router = express.Router();
+
 const {
-  getProducts,
-  getProduct,
-  createProduct,
-  updateProduct,
-  deleteProduct,
-  searchProducts,
-  bulkInsertProducts,
-  addStock,
+  getProducts,         // Function to get all products
+  getProduct,          // Function to get a single product by ID
+  createProduct,       // Function to create a new product
+  updateProduct,       // Function to update product details
+  deleteProduct,       // Function to delete a product
+  searchProducts,      // Function to search for products
+  bulkInsertProducts,  // Function to insert multiple products at once
+  addStock,            // Function to add stock to an existing product
+} = require("../controllers/product.controller.js"); // Importing product-related controller functions
 
-} = require("../controllers/product.controller.js");
-
-// Search route should be placed first to avoid conflicts
+// ✅ Route to search for products (Placed first to prevent conflicts with other routes)
 router.get("/search", searchProducts);
 
-// Product CRUD operations
-router.get("/", getProducts);
-router.get("/:id", getProduct);
-router.post("/", createProduct);
-router.put("/:id", updateProduct);
-router.delete("/:id", deleteProduct);
+// ✅ Routes for product CRUD operations
+router.get("/", getProducts);        // Fetch all products
+router.get("/:id", getProduct);       // Fetch a specific product by its ID
+router.post("/", createProduct);      // Create a new product
+router.put("/:id", updateProduct);    // Update an existing product by ID
+router.delete("/:id", deleteProduct); // Delete a product by ID
 
-// Additional features
-router.post("/bulk", bulkInsertProducts);
-router.patch("/:id/add-stock", addStock);
+// ✅ Additional routes for bulk operations and stock management
+router.post("/bulk", bulkInsertProducts);     // Bulk insert multiple products
+router.patch("/:id/add-stock", addStock);     // Add stock to an existing product
 
-module.exports = router;
+module.exports = router; // Exporting the router for use in the main application
