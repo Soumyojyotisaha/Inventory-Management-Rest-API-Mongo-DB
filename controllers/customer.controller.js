@@ -1,12 +1,13 @@
 const Customer = require("../models/customer.model.js");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const crypto = require("crypto");
-const sendEmail = require("../utils/mailer");
+const bcrypt = require("bcryptjs"); // ✅ Use bcryptjs instead of bcrypt
+const {crypto} = require("crypto");
+const {sendEmail} = require("../utils/mailer");
 const { sendOTP, generateOTP } = require("../utils/mailer"); 
 const { otpStorage } = require("../utils/otpStorage");
 
 const tokenBlacklist = new Set(); // Store blacklisted tokens temporarily
+const JWT_SECRET = "your_static_secret_key";
 
 // ✅ Enable or Disable 2FA
 const toggle2FA = async (req, res) => {
@@ -73,7 +74,7 @@ const loginCustomer = async (req, res) => {
     }
 
     // ✅ Generate JWT token if 2FA is disabled
-    const token = jwt.sign({ id: customer._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+    const token = jwt.sign({ id: customer._id }, JWT_SECRET, { expiresIn: "1d" });
 
     res.json({
       message: "Login successful",
@@ -84,6 +85,7 @@ const loginCustomer = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 const verifyOTP = async (req, res) => {
   try {
     const { email, otp } = req.body;
@@ -235,14 +237,12 @@ const forgotPassword = async (req, res) => {
   }
 };
 
-
-//Reset Password
 const resetPassword = async (req, res) => {
   try {
     const { newPassword, token } = req.body;
-    const customerId = req.customer.id; // Get customer ID from authenticated token
+    const customerId = req.customer.id;
 
-    const customer = await Customer.findById(customerId); // Fetch full document
+    const customer = await Customer.findById(customerId);
 
     if (!customer) {
       return res.status(404).json({ message: "Customer not found" });
@@ -252,18 +252,21 @@ const resetPassword = async (req, res) => {
       return res.status(400).json({ message: "Invalid or expired token" });
     }
 
-    customer.password = newPassword; // Hash this in production
+    // ✅ Hash the new password before saving
+    const salt = await bcrypt.genSalt(10);
+    customer.password = await bcrypt.hash(newPassword, salt);
+
     customer.resetPasswordToken = undefined;
     customer.resetPasswordExpires = undefined;
 
-    await customer.save(); // Save updated password
+    await customer.save();
 
     res.json({ message: "Password reset successful." });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
-  
+
 
 
 module.exports = { 
@@ -278,5 +281,6 @@ module.exports = {
   resetPassword,
   toggle2FA,
   verifyOTP,  
-  sendOTP  
+  sendOTP,
+  tokenBlacklist  
 };

@@ -42,20 +42,6 @@ const sendEmail = async (toEmail, subject, body) => {
   }
 };
 
-// /**
-//  * Generate and send a 6-digit OTP via email for 2FA
-//  * @param {string} toEmail - Recipient's email
-//  * @returns {string} OTP sent to the user
-//  */
-// const sendOTPEmail = async (toEmail) => {
-//   const otp = Math.floor(100000 + Math.random() * 900000).toString(); // Generate 6-digit OTP
-//   const subject = "Your 2FA Verification Code";
-//   const body = `Your One-Time Password (OTP) for login is: ${otp}\n\nThis OTP will expire in 5 minutes.`;
-
-//   const emailSent = await sendEmail(toEmail, subject, body);
-//   return emailSent ? otp : null;
-// };
-// Generate a random 6-digit OTP
 const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };

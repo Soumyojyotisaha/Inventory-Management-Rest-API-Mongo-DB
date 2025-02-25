@@ -95,8 +95,6 @@ const searchProducts = async (req, res) => {
   }
 };
 
-
-
 // Insert multiple products at once
 const bulkInsertProducts = async (req, res) => {
   try {

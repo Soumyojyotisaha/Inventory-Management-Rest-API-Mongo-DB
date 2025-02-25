@@ -1,10 +1,10 @@
 // Import required modules
 const Supplier = require("../models/supplier.model.js"); // Supplier model for database operations
 const jwt = require("jsonwebtoken"); // JWT library for authentication
-const bcrypt = require("bcryptjs"); // Library for hashing passwords
+const bcrypt = require("bcryptjs"); // ✅ Use bcryptjs instead of bcrypt // Library for hashing passwords
 const tokenBlacklist = new Set(); // In-memory set to store blacklisted tokens (for logout)
-const crypto = require("crypto"); // Library for generating secure tokens
-const sendEmail = require("../utils/mailer"); // Utility function to send emails
+const crypto = require("node:crypto");
+const {sendEmail} = require("../utils/mailer.js"); // Utility function to send emails
 
 // ✅ Supplier Login Handler
 const loginSupplier = async (req, res) => {
@@ -100,69 +100,63 @@ const logoutSupplier = async (req, res) => {
 const forgotPasswordSupplier = async (req, res) => {
   try {
     const { email } = req.body;
-    const supplier = await Supplier.findOne({ email });
+    const normalizedEmail = email.toLowerCase(); // Normalize email for case insensitivity
+    const supplier = await Supplier.findOne({ email: normalizedEmail });
 
-    // If no supplier is found with the provided email, return an error
     if (!supplier) {
       return res.status(404).json({ message: "Supplier not found" });
     }
 
-    // Generate a password reset token (random 32-byte string)
+    // Generate Reset Token
     const resetToken = crypto.randomBytes(32).toString("hex");
     supplier.resetPasswordToken = resetToken;
-    supplier.resetPasswordExpires = Date.now() + 3600000; // Token valid for 1 hour
+    supplier.resetPasswordExpires = Date.now() + 3600000; // 1 hour expiration
 
-    await supplier.save(); // Save the reset token details in the database
+    await supplier.save(); // Save updated fields
 
-    // Construct the password reset link
-    const resetLink = `http://localhost:5000/reset-password/supplier/${resetToken}`;
-    const emailBody = `Click the following link to reset your password:\n\n${resetLink}\n\nThis link is valid for 1 hour.`;
-
-    // Send reset email to supplier
+    // Send Reset Email
+    const emailBody = `Use this token to reset your password: ${resetToken}`;
     const emailSent = await sendEmail(supplier.email, "Password Reset Request", emailBody);
 
-    // Return response based on email sending success/failure
     if (emailSent) {
-      res.json({ message: "Reset password link sent to your email" });
+      res.json({ message: "Password reset token sent to your email." });
     } else {
       res.status(500).json({ message: "Error sending email" });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message }); // Handle server errors
+    res.status(500).json({ message: error.message });
   }
 };
 
-// ✅ Reset Password Handler
+// Reset Password
 const resetPasswordSupplier = async (req, res) => {
   try {
-    const { token, newPassword } = req.body;
+    const { newPassword, token } = req.body;
 
-    // Find supplier using the reset token (and ensure it hasn't expired)
     const supplier = await Supplier.findOne({
       resetPasswordToken: token,
       resetPasswordExpires: { $gt: Date.now() }, // Ensure token is still valid
     });
 
-    // If no supplier is found, return an error
     if (!supplier) {
       return res.status(400).json({ message: "Invalid or expired token" });
     }
 
-    // Hash the new password before updating in database
+    // Hash the new password before saving
     const salt = await bcrypt.genSalt(10);
     supplier.password = await bcrypt.hash(newPassword, salt);
 
-    // Clear the reset token fields after successful password update
     supplier.resetPasswordToken = undefined;
     supplier.resetPasswordExpires = undefined;
 
-    await supplier.save(); // Save the updated supplier data
+    await supplier.save();
 
-    res.json({ message: "Password reset successful" }); // Return success message
+    res.json({ message: "Password reset successful." });
   } catch (error) {
-    res.status(500).json({ message: error.message }); // Handle server errors
+    res.status(500).json({ message: error.message });
   }
 };
+
 
 // Export all supplier authentication handlers
 module.exports = { 

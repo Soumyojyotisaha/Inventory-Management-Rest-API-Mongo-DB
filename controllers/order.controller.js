@@ -1,6 +1,7 @@
 const Order = require("../models/order.model");
 const Product = require("../models/product.model");
-const sendEmail = require("../utils/mailer");
+const { sendEmail } = require("../utils/mailer.js");
+
 
 // ✅ Place an Order (Stock Validation & Auto Price Calculation)
 const placeOrder = async (req, res) => {
@@ -150,7 +151,7 @@ const cancelOrder = async (req, res) => {
     if (order.status !== "Pending") {
       return res
         .status(400)
-        .json({ message: "Order cannot be canceled as it is already processed" });
+        .json({ message: "Order cannot be cancelled as it is already processed" });
     }
 
     // Restore stock for each product

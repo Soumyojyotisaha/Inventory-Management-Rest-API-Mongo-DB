@@ -19,7 +19,7 @@ const authenticateCustomer = (req, res, next) => {
 
   try {
     // Verify the token and extract the payload
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token,JWT_SECRET);
     req.customer = decoded; // Attach the decoded customer information to the request
     next(); // Proceed to the next middleware or route handler
   } catch (error) {
