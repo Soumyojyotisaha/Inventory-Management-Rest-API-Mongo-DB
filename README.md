@@ -1,217 +1,168 @@
-# Product Management API
+# 🛒 Inventory Management System
 
-This API provides endpoints for managing products in a database. It supports operations such as creating, reading, updating, and deleting products, as well as bulk operations, searching, and stock management.
+Welcome to the **Inventory Management System**!  
+This is a full-stack web application built to streamline inventory control, order processing, and customer-supplier interactions.
 
-## Base URL
+---
 
-All endpoints are relative to the base URL:
-https://localhost:3000/api/products
+## 🚀 Features
 
+### 🌟 Customer Features
+- 🛒 **Place Orders**: Browse products and place orders.
+- 📦 **View Orders**: Check order history and details.
+- ❌ **Cancel Orders**: Cancel pending orders.
+- ✏️ **Update Profile**: Edit personal information.
+- 🔑 **Forgot Password**: Reset password via email.
 
-## Endpoints
+### 🌟 Supplier Features
+- ➕ **Add Products**: Add new products to the system.
+- ✏️ **Update Products**: Edit product name, price, etc.
+- 🗑️ **Delete Products**: Remove products from inventory.
+- 📈 **Update Stock**: Manage and adjust stock levels.
+- 📦 **Update Order Status**: Modify order statuses.
+- 👥 **View Customers**: Access registered customer details.
+- 🔒 **Toggle 2FA**: Enable/disable two-factor authentication for customers.
 
-### 1. Get All Products
+---
 
-Retrieves a list of all products.
+## 🛠️ Tech Stack
 
-- **URL:** `/`
-- **Method:** `GET`
-- **Response:** 
-  - Status Code: 200 OK
-  - Body: Array of product objects
+### 🖥️ Frontend
+- ⚛️ **React.js**
+- 🎨 **Bootstrap**
+- 🌐 **React Router**
 
-**Example Request:**
-GET /api/products/
+### 🖥️ Backend
+- 🟢 **Node.js**
+- 🔄 **Express.js**
+- 🗄️ **MongoDB**
+- 🔐 **JWT** for authentication
 
+### 📧 Email Service
+- **Mailjet** (for password reset, OTP, etc.)
 
-### 2. Get a Single Product by ID
+---
 
-Retrieves a single product by its ID.
+## 📂 Project Structure
 
-- **URL:** `/:id`
-- **Method:** `GET`
-- **Parameters:** 
-  - `id` (string, required): The ID of the product
-- **Response:** 
-  - Status Code: 200 OK if found, 404 Not Found if not found
-  - Body: Product object
+### Frontend (`Front-end/`)
+```
+src/
+├── assets/              # Images and static files
+├── components/          # Reusable components
+├── pages/
+│   ├── Customer_Pages/  # Customer dashboard pages
+│   ├── Supplier_Pages/  # Supplier dashboard pages
+├── App.js               # Main React component
+├── index.js             # React DOM entry
+└── styles.css           # Global styles
+```
 
-**Example Request:**
-GET /api/products/64f1b2c3e4b0a1b2c3d4e5f6
+### Backend (`Back-end/`)
+```
+├── models/              # Mongoose data models
+├── routes/              # API route definitions
+├── controllers/         # Route handlers/business logic
+├── middleware/          # Auth, validation, etc.
+├── .env                 # Environment variables
+├── server.js            # Application entry point
+└── package.json         # Backend dependencies
+```
 
+---
 
-### 3. Create a New Product
+## ⚙️ Installation & Setup
 
-Creates a new product.
+### Prerequisites
+- 📦 Node.js
+- 🗄️ MongoDB (local or cloud instance)
 
-- **URL:** `/`
-- **Method:** `POST`
-- **Request Body:**
-  - `name` (string, required): Name of the product
-  - `price` (number, required): Price of the product
-  - `quantity` (number, optional): Quantity in stock (default: 0)
-- **Response:** 
-  - Status Code: 201 Created
-  - Body: Created product object
+### Installation Steps
 
-**Example Request:**
-POST /api/products/
-Content-Type: application/json
-{
-"name": "New Product",
-"price": 39.99,
-"quantity": 200
-}
+```bash
+# 1. Clone the repository
+git clone https://github.com/your-username/inventory-management-system.git
+cd inventory-management-system
 
+# 2. Setup Backend
+cd Back-end
+npm install
 
-### 4. Update a Product
+# 3. Setup Frontend
+cd ../Front-end
+npm install
+```
 
-Updates an existing product by ID.
+### Environment Configuration
 
-- **URL:** `/:id`
-- **Method:** `PUT`
-- **Parameters:**
-  - `id` (string, required): The ID of the product to update
-- **Request Body:**
-  - `name` (string, optional): Updated name
-  - `price` (number, optional): Updated price
-  - `quantity` (number, optional): Updated quantity
-- **Response:**
-  - Status Code: 200 OK if updated, 404 Not Found if not found
-  - Body: Updated product object
+Update the `.env` file in the `Back-end/` directory with:
 
-**Example Request:**
-PUT /api/products/64f1b2c3e4b0a1b2c3d4e5f6
-Content-Type: application/json
-{
-"price": 49.99
-}
+- MongoDB URI
+- Mailjet API keys
+- JWT secret
+- Port configurations
 
+### Running the App
 
-### 5. Delete a Product
+```bash
+# Start the backend
+cd ../Back-end
+npm run dev
 
-Deletes a product by ID.
+# Start the frontend
+cd ../Front-end
+npm start
+```
 
-- **URL:** `/:id`
-- **Method:** `DELETE`
-- **Parameters:**
-  - `id` (string, required): The ID of the product to delete
-- **Response:**
-  - Status Code: 200 OK if deleted, 404 Not Found if not found
-  - Body: Success message
+---
 
-**Example Request:**
-DELETE /api/products/64f1b2c3e4b0a1b2c3d4e5f6
-text
+## 🌐 API Endpoints
 
+### 🔐 Authentication
+- `POST /api/customers/register` - Register customer  
+- `POST /api/customers/login` - Customer login  
+- `POST /api/suppliers/register` - Register supplier  
+- `POST /api/suppliers/login` - Supplier login  
 
-### 6. Bulk Delete Products
+### 📦 Products
+- `GET /api/products` - Fetch all products  
+- `POST /api/products` - Add product (Supplier)  
+- `PUT /api/products/:id` - Update product (Supplier)  
+- `DELETE /api/products/:id` - Delete product (Supplier)  
 
-Deletes multiple products by their IDs.
+### 📬 Orders
+- `POST /api/orders` - Place new order (Customer)  
+- `GET /api/orders` - Get all orders (Supplier)  
+- `PUT /api/orders/:id/status` - Update order status (Supplier)  
 
-- **URL:** `/bulk-delete`
-- **Method:** `POST`
-- **Request Body:**
-  - `ids` (array of strings, required): Array of product IDs to delete
-- **Response:**
-  - Status Code: 200 OK if deleted, 400 Bad Request if no IDs provided, 404 Not Found if no products found
-  - Body: Success message with the count of deleted products
+---
 
-**Example Request:**
-POST /api/products/bulk-delete
-Content-Type: application/json
-{
-"ids": ["64f1b2c3e4b0a1b2c3d4e5f6", "64f1b2c3e4b0a1b2c3d4e5f7"]
-}
+## 📸 Screenshots
 
+### 🔹 Landing Page  
+<img alt="Landing Page" src="https://via.placeholder.com/800x400" />
 
+### 🔹 Customer Dashboard  
+<img alt="Customer Dashboard" src="https://via.placeholder.com/800x400" />
 
-### 7. Search and Filter Products
+### 🔹 Supplier Dashboard  
+<img alt="Supplier Dashboard" src="https://via.placeholder.com/800x400" />
 
-Searches and filters products by name and price range.
+---
 
-- **URL:** `/search`
-- **Method:** `GET`
-- **Query Parameters:**
-  - `name` (string, optional): Product name to search for (case-insensitive)
-  - `minPrice` (number, optional): Minimum price filter
-  - `maxPrice` (number, optional): Maximum price filter
-- **Response:**
-  - Status Code: 200 OK
-  - Body: Array of filtered product objects
+## 🧑‍💻 Contributors
 
-**Example Request:**
-GET /api/products/search?name=Product&minPrice=10&maxPrice=50
+- **Soumyojyoti Saha** – [GitHub Profile](https://github.com/soumyojyotisaha)
 
+---
 
-### 8. Bulk Insert Products
+## 📜 License
 
-Inserts multiple products at once.
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for more information.
 
-- **URL:** `/bulk-insert`
-- **Method:** `POST`
-- **Request Body:** Array of product objects
-- **Response:**
-  - Status Code: 201 Created
-  - Body: Array of created product objects
+---
 
-**Example Request:**
-POST /api/products/bulk-insert
-Content-Type: application/json
-[
-{
-"name": "Product A",
-"price": 10.99,
-"quantity": 50
-},
-{
-"name": "Product B",
-"price": 20.99,
-"quantity": 30
-}
-]
+## 📞 Contact
 
-
-### 9. Get Total Count of Products
-
-Retrieves the total count of products in the database.
-
-- **URL:** `/count`
-- **Method:** `GET`
-- **Response:**
-  - Status Code: 200 OK
-  - Body: Object with the total count of products
-
-**Example Request:**
-GET /api/products/count
-
-
-
-### 10. Reduce Stock Quantity
-
-Reduces the stock quantity of a product after a purchase.
-
-- **URL:** `/:id/reduce-stock`
-- **Method:** `POST`
-- **Parameters:**
-  - `id` (string, required): The ID of the product
-- **Request Body:**
-  - `quantity` (number, required): The quantity to reduce
-- **Response:**
-  - Status Code: 200 OK if successful, 404 Not Found if product not found, 400 Bad Request if insufficient stock
-  - Body: Updated product object
-
-**Example Request:**
-POST /api/products/64f1b2c3e4b0a1b2c3d4e5f6/reduce-stock
-Content-Type: application/json
-{
-"quantity": 5
-}
-
-
-
-## Error Responses
-
-All endpoints return a 500 Internal Server Error with a message if an unexpected error occurs:
-
-mongodb+srv://soumyojyotisaha2021:Soumyo@2001@cluster0.7g7yo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+For feedback or inquiries:  
+📧 **Email**: [soumyojyotisaha2001offic@gmail.com](mailto:soumyojyotisaha2001offic@gmail.com)
