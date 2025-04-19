@@ -5,6 +5,11 @@ This is a full-stack web application built to streamline inventory control, orde
 
 ---
 
+<div align="center">
+  <img alt="Landing Page" src="frontend/public/landingpage.jpg" width="80%" />
+</div>
+
+---
 ## 🚀 Features
 
 ### 🌟 Customer Features
@@ -140,13 +145,13 @@ npm start
 ## 📸 Screenshots
 
 ### 🔹 Landing Page  
-<img alt="Landing Page" src="https://via.placeholder.com/800x400" />
+<img alt="Landing Page" src="frontend/public/landingpage.jpg" />
 
 ### 🔹 Customer Dashboard  
-<img alt="Customer Dashboard" src="https://via.placeholder.com/800x400" />
+<img alt="Customer Dashboard" src="frontend/public/customer dashboard.jpg" />
 
 ### 🔹 Supplier Dashboard  
-<img alt="Supplier Dashboard" src="https://via.placeholder.com/800x400" />
+<img alt="Supplier Dashboard" src="frontend/public/supplier dashoard.jpg" />
 
 ---
 
