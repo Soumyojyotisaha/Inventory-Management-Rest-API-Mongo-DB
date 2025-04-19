@@ -6,7 +6,7 @@ This is a full-stack web application built to streamline inventory control, orde
 ---
 
 <div align="center">
-  <img alt="Landing Page" src="frontend/public/landingpage.jpg" width="80%" />
+  <img alt="Landing Page" src="frontend/public/ecommerce-maestro_1029476-191472.avif" width="80%" />
 </div>
 
 ---
