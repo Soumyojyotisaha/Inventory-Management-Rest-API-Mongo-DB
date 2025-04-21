@@ -171,3 +171,5 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 For feedback or inquiries:  
 📧 **Email**: [soumyojyotisaha2001offic@gmail.com](mailto:soumyojyotisaha2001offic@gmail.com)
+
+### Mongo-DB srv Link: mongodb+srv://<db id>:<db passcode >@cluster0.7spjbdn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
