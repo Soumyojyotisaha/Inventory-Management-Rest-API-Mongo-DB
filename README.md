@@ -1,7 +1,5 @@
 # 🛒 Inventory Management System
 
-# 🛒 Inventory Management System
-
 Welcome to the **Inventory Management System**!  
 This is a comprehensive full-stack web application designed to simplify and optimize inventory management processes for businesses of all sizes. The system provides a seamless interface for managing products, processing orders, and facilitating interactions between customers and suppliers. 
 
