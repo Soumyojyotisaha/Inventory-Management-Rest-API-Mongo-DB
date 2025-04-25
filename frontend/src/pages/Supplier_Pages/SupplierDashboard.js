@@ -6,7 +6,6 @@ import Background from "../Background";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 
-
 function SupplierDashboard() {
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -16,10 +15,8 @@ function SupplierDashboard() {
   const productsPerPage = 12;
   const navigate = useNavigate();
 
-
   useEffect(() => {
     const token = localStorage.getItem("supplier-jwtToken");
-
 
     if (!token) {
       console.error("No token found, redirecting to supplier login page.");
@@ -28,9 +25,8 @@ function SupplierDashboard() {
       return;
     }
 
-
     axios
-      .get("http://localhost:3000/api/products", {
+      .get("https://inventory-management-rest-api-mongo-db.onrender.com/api/products", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -43,7 +39,6 @@ function SupplierDashboard() {
       });
   }, [navigate]);
 
-
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
     product.price >= priceRange[0] &&
@@ -52,7 +47,6 @@ function SupplierDashboard() {
     product.quantity <= stockRange[1]
   );
 
-
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = filteredProducts.slice(
@@ -60,13 +54,11 @@ function SupplierDashboard() {
     indexOfLastProduct
   );
 
-
   const nextPage = () => {
     if (indexOfLastProduct < filteredProducts.length) {
       setCurrentPage(currentPage + 1);
     }
   };
-
 
   const prevPage = () => {
     if (currentPage > 1) {
@@ -74,11 +66,9 @@ function SupplierDashboard() {
     }
   };
 
-
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem("supplier-jwtToken");
-
 
       if (!token) {
         console.error("No token found, redirecting to login page.");
@@ -87,9 +77,8 @@ function SupplierDashboard() {
         return;
       }
 
-
       await axios.post(
-        "http://localhost:3000/api/suppliers/logout",
+        "https://inventory-management-rest-api-mongo-db.onrender.com/api/suppliers/logout",
         {},
         {
           headers: {
@@ -97,7 +86,6 @@ function SupplierDashboard() {
           },
         }
       );
-
 
       localStorage.removeItem("supplier-jwtToken");
       alert("You have been logged out successfully!");
@@ -108,18 +96,15 @@ function SupplierDashboard() {
     }
   };
 
-
   return (
     <div className="d-flex">
       <Background />
       <SideNavbar handleLogout={handleLogout} />
 
-
       <div className="container mt-4" style={{ marginLeft: "270px", width: "80%", backdropFilter: "blur(5px)" }}>
-        <h1 className="mb-4 fw-bold text-center" style={{ fontSize: "2.5rem", color: "rgb(51, 51, 51)", background:"white", padding:"15px" }}>
+        <h1 className="mb-4 fw-bold text-center" style={{ fontSize: "2.5rem", color: "rgb(51, 51, 51)", background: "white", padding: "15px" }}>
           Welcome to <span style={{ color: "rgb(0, 123, 255)" }}>Inventory Hub</span>
         </h1>
-
 
         <div className="mb-3">
           <input
@@ -130,7 +115,6 @@ function SupplierDashboard() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-
 
         <div className="mb-3">
           <label>Filter by Price:</label>
@@ -148,7 +132,6 @@ function SupplierDashboard() {
           </div>
         </div>
 
-
         <div className="mb-3">
           <label>Filter by Stock:</label>
           <Slider
@@ -164,7 +147,6 @@ function SupplierDashboard() {
             <span style={{ backgroundColor: "white", padding: "2px 5px" }}>{stockRange[1]}</span>
           </div>
         </div>
-
 
         <div className="row">
           {currentProducts.length > 0 ? (
@@ -185,7 +167,6 @@ function SupplierDashboard() {
           )}
         </div>
 
-
         <div className="d-flex justify-content-between align-items-center mt-3">
           <button className="btn btn-sm btn-primary mx-5" onClick={prevPage} disabled={currentPage === 1}>
             &larr;
@@ -202,13 +183,4 @@ function SupplierDashboard() {
   );
 }
 
-
 export default SupplierDashboard;
-
-
-
-
-
-
-
-

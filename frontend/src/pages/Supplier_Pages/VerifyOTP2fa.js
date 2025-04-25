@@ -2,21 +2,18 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 
-
 function VerifyOTP2fa() {
   const [otp, setOtp] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
   const email = location.state?.email;
 
-
   const handleVerifyOtp = async () => {
     try {
-      const response = await axios.post("http://localhost:3000/api/customers/verify-otp", {
+      const response = await axios.post("https://inventory-management-rest-api-mongo-db.onrender.com/api/customers/verify-otp", {
         email,
         otp,
       });
-
 
       const customerToken = response.data.token;
       localStorage.setItem("customer-jwtToken", customerToken);
@@ -27,7 +24,6 @@ function VerifyOTP2fa() {
       alert("OTP verification failed. Please try again.");
     }
   };
-
 
   return (
     <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
@@ -51,10 +47,4 @@ function VerifyOTP2fa() {
   );
 }
 
-
 export default VerifyOTP2fa;
-
-
-
-
-

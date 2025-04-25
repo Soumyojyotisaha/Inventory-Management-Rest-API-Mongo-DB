@@ -29,14 +29,14 @@ function AddProduct() {
       name,
       type,
       quantity,
-      price
+      price,
     };
 
 
-    axios.post("http://localhost:3000/api/products", newProduct, {
+    axios.post("https://inventory-management-rest-api-mongo-db.onrender.com/api/products", newProduct, {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     })
     .then(response => {
       console.log("Product added response:", response.data);
@@ -59,64 +59,66 @@ function AddProduct() {
       <SupplierSideNavbar />
 
 
-      <div className="container mt-4" style={{ marginLeft: "270px", width: "80%", backdropFilter: "blur(5px)" }}>
-        <h1 className="mb-4 fw-bold text-center" style={{ fontSize: "2.5rem", color: "rgb(51, 51, 51)" }}>
-          Add Product
-        </h1>
+      <div className="container mt-4 d-flex justify-content-center align-items-center" style={{ marginLeft: "270px", width: "100%", maxWidth: "90%", backdropFilter: "blur(5px)" }}>
+        <div className="w-100" style={{ maxWidth: "600px" }}>
+          <h1 className="mb-4 fw-bold text-center" style={{ fontSize: "2.5rem", color: "rgb(51, 51, 51)" }}>
+            Add Product
+          </h1>
 
 
-        <div className="mb-3">
-          <label>Product Name:</label>
-          <input
-            type="text"
-            className="form-control"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+          <div className="mb-3">
+            <label>Product Name:</label>
+            <input
+              type="text"
+              className="form-control"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+
+
+          <div className="mb-3">
+            <label>Product Type:</label>
+            <select
+              className="form-control"
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+            >
+              <option value="">Select Type</option>
+              <option value="phone">Phone</option>
+              <option value="tablet">Tablet</option>
+              <option value="laptop">Laptop</option>
+              <option value="accessory">Accessory</option>
+            </select>
+          </div>
+
+
+          <div className="mb-3">
+            <label>Quantity:</label>
+            <input
+              type="number"
+              className="form-control"
+              value={quantity}
+              onChange={(e) => setQuantity(parseInt(e.target.value))}
+            />
+          </div>
+
+
+          <div className="mb-3">
+            <label>Price:</label>
+            <input
+              type="number"
+              className="form-control"
+              value={price}
+              onChange={(e) => setPrice(parseFloat(e.target.value))}
+            />
+          </div>
+
+
+          <button className="btn btn-primary" onClick={handleAddProduct}>
+            Add Product
+          </button>
         </div>
-
-
-        <div className="mb-3">
-          <label>Product Type:</label>
-          <select
-            className="form-control"
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-          >
-            <option value="">Select Type</option>
-            <option value="tablet">Phone</option>
-            <option value="tablet">Tablet</option>
-            <option value="laptop">Laptop</option>
-            <option value="accessory">Accessory</option>
-          </select>
-        </div>
-
-
-        <div className="mb-3">
-          <label>Quantity:</label>
-          <input
-            type="number"
-            className="form-control"
-            value={quantity}
-            onChange={(e) => setQuantity(parseInt(e.target.value))}
-          />
-        </div>
-
-
-        <div className="mb-3">
-          <label>Price:</label>
-          <input
-            type="number"
-            className="form-control"
-            value={price}
-            onChange={(e) => setPrice(parseFloat(e.target.value))}
-          />
-        </div>
-
-
-        <button className="btn btn-primary" onClick={handleAddProduct}>
-          Add Product
-        </button>
       </div>
     </div>
   );
@@ -124,6 +126,8 @@ function AddProduct() {
 
 
 export default AddProduct;
+
+
 
 
 

@@ -12,23 +12,23 @@ function ForgotSupplierPassword() {
 
 
   const handleForgotPassword = () => {
-    axios.post("http://localhost:3000/api/suppliers/forgot-password", { email })
-    .then(response => {
-      alert("Password reset email sent! Please check your inbox.");
-      setStep(2); // Move to the next step
-    })
-    .catch(error => {
-      console.error("Error sending password reset email:", error);
-      const errorMessage = error.response && error.response.data && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-      alert(`Failed to send password reset email. Error: ${errorMessage}`);
-    });
+    axios.post("https://inventory-management-rest-api-mongo-db.onrender.com/api/suppliers/forgot-password", { email })
+      .then(response => {
+        alert("Password reset email sent! Please check your inbox.");
+        setStep(2); // Move to the next step
+      })
+      .catch(error => {
+        console.error("Error sending password reset email:", error);
+        const errorMessage = error.response && error.response.data && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+        alert(`Failed to send password reset email. Error: ${errorMessage}`);
+      });
   };
 
 
   const handleResetPassword = () => {
-    axios.post("http://localhost:3000/api/suppliers/reset-password", { newPassword, token })
+    axios.post("https://inventory-management-rest-api-mongo-db.onrender.com/api/suppliers/reset-password", { newPassword, token })
       .then(response => {
         alert("Password reset successfully!");
         setEmail("");
@@ -50,50 +50,52 @@ function ForgotSupplierPassword() {
     <div className="d-flex">
       <Background />
       <SupplierSideNavbar />
-      <div className="container mt-4" style={{ marginLeft: "270px", width: "60%", backdropFilter: "blur(5px)" }}>
-        <h1 className="mb-4 fw-bold text-center" style={{ fontSize: "2rem", color: "rgb(51, 51, 51)" }}>
-          {step === 1 ? "Forgot Password" : "Reset Password"}
-        </h1>
-        {step === 1 ? (
-          <div className="card p-3" style={{ backgroundColor: "#f8f9fa", boxShadow: "0px 4px 8px rgba(28, 139, 230, 0.7)", borderRadius: "10px" }}>
-            <div className="mb-3">
-              <label className="form-label"><strong>Email:</strong></label>
-              <input
-                type="email"
-                className="form-control"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+      <div className="container mt-4 d-flex justify-content-center align-items-center" style={{ marginLeft: "270px", width: "100%", maxWidth: "90%", backdropFilter: "blur(5px)" }}>
+        <div className="w-100" style={{ maxWidth: "600px" }}>
+          <h1 className="mb-4 fw-bold text-center" style={{ fontSize: "2rem", color: "rgb(51, 51, 51)" }}>
+            {step === 1 ? "Forgot Password" : "Reset Password"}
+          </h1>
+          {step === 1 ? (
+            <div className="card p-3 mx-auto" style={{ backgroundColor: "#f8f9fa", boxShadow: "0px 4px 8px rgba(28, 139, 230, 0.7)", borderRadius: "10px", maxWidth: "600px" }}>
+              <div className="mb-3">
+                <label className="form-label"><strong>Email:</strong></label>
+                <input
+                  type="email"
+                  className="form-control"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <button className="btn btn-primary btn-sm" onClick={handleForgotPassword}>
+                Send Reset Email
+              </button>
             </div>
-            <button className="btn btn-primary btn-sm" onClick={handleForgotPassword}>
-              Send Reset Email
-            </button>
-          </div>
-        ) : (
-          <div className="card p-3" style={{ backgroundColor: "#f8f9fa", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", borderRadius: "10px" }}>
-            <div className="mb-3">
-              <label className="form-label"><strong>Token:</strong></label>
-              <input
-                type="text"
-                className="form-control"
-                value={token}
-                onChange={(e) => setToken(e.target.value)}
-              />
+          ) : (
+            <div className="card p-3 mx-auto" style={{ backgroundColor: "#f8f9fa", boxShadow: "0px 4px 8px rgba(28, 139, 230, 0.7)", borderRadius: "10px", maxWidth: "600px" }}>
+              <div className="mb-3">
+                <label className="form-label"><strong>Token:</strong></label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={token}
+                  onChange={(e) => setToken(e.target.value)}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label"><strong>New Password:</strong></label>
+                <input
+                  type="password"
+                  className="form-control"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                />
+              </div>
+              <button className="btn btn-primary btn-sm" onClick={handleResetPassword}>
+                Reset Password
+              </button>
             </div>
-            <div className="mb-3">
-              <label className="form-label"><strong>New Password:</strong></label>
-              <input
-                type="password"
-                className="form-control"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-              />
-            </div>
-            <button className="btn btn-primary btn-sm" onClick={handleResetPassword}>
-              Reset Password
-            </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
@@ -101,6 +103,7 @@ function ForgotSupplierPassword() {
 
 
 export default ForgotSupplierPassword;
+
 
 
 

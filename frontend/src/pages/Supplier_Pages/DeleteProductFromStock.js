@@ -23,7 +23,7 @@ function DeleteProductFromStock() {
       return;
     }
 
-    axios.get("http://localhost:3000/api/products", {
+    axios.get("https://inventory-management-rest-api-mongo-db.onrender.com/api/products", {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -46,7 +46,7 @@ function DeleteProductFromStock() {
       return;
     }
 
-    axios.delete(`http://localhost:3000/api/products/${productId}`, {
+    axios.delete(`https://inventory-management-rest-api-mongo-db.onrender.com/api/products/${productId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -86,12 +86,10 @@ function DeleteProductFromStock() {
     }
   };
 
-
   return (
     <div className="d-flex">
       <Background />
       <SupplierSideNavbar />
-
 
       {/* Main Content */}
       <div className="container mt-4" style={{ marginLeft: "270px", width: "80%", backdropFilter: "blur(5px)" }}>
@@ -104,7 +102,6 @@ function DeleteProductFromStock() {
           Delete Products
         </h1>
 
-
         <div className="mb-3">
           <input
             type="text"
@@ -114,7 +111,6 @@ function DeleteProductFromStock() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-
 
         <div className="row">
           {currentProducts.length > 0 ? (
@@ -136,7 +132,6 @@ function DeleteProductFromStock() {
           )}
         </div>
 
-
         <div className="d-flex justify-content-between align-items-center mt-3">
           <button className="btn btn-sm btn-primary mx-5" onClick={prevPage} disabled={currentPage === 1}>
             &larr;
@@ -149,7 +144,6 @@ function DeleteProductFromStock() {
           </button>
         </div>
 
-
         {deleteMessage && (
           <div className="alert alert-success mt-3 w-50">
             {deleteMessage}
@@ -160,10 +154,4 @@ function DeleteProductFromStock() {
   );
 }
 
-
 export default DeleteProductFromStock;
-
-
-
-
-

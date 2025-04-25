@@ -24,7 +24,7 @@ function Toggle2FA() {
     }
 
 
-    axios.get("http://localhost:3000/api/customers", {
+    axios.get("https://inventory-management-rest-api-mongo-db.onrender.com/api/customers", {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -45,11 +45,15 @@ function Toggle2FA() {
 
 
     try {
-      const response = await axios.post(`http://localhost:3000/api/customers/toggle-2fa`, { email: selectedCustomer.email, enable: !selectedCustomer.twoFactorEnabled }, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axios.post(
+        "https://inventory-management-rest-api-mongo-db.onrender.com/api/customers/toggle-2fa",
+        { email: selectedCustomer.email, enable: !selectedCustomer.twoFactorEnabled },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      });
+      );
 
 
       console.log(response.data); // Print the API response in the console
@@ -83,35 +87,37 @@ function Toggle2FA() {
       <SupplierSideNavbar />
 
 
-      <div className="container mt-4" style={{ marginLeft: "270px", width: "80%", backdropFilter: "blur(5px)" }}>
-        <h1 className="mb-4 fw-bold text-center" style={{ fontSize: "2.5rem", color: "rgb(51, 51, 51)" }}>
-          Toggle Two-Factor Authentication
-        </h1>
-        <div className="mb-3">
-          <label style={{ fontWeight: "bold" }}>Select Customer Email:</label>
-          <select
-            className="form-control"
-            value={selectedCustomer ? selectedCustomer.email : ""}
-            onChange={(e) => setSelectedCustomer(customers.find(customer => customer.email === e.target.value))}
-          >
-            <option value="" disabled>Select an email</option>
-            {customers.map(customer => (
-              <option key={customer._id} value={customer.email}>{customer.email}</option>
-            ))}
-          </select>
-        </div>
-        {selectedCustomer && (
-          <div className="card p-3" style={{ backgroundColor: "#f8f9fa", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", borderRadius: "10px" }}>
-            <h4 className="fw-bold">Name: {selectedCustomer.name}</h4>
-            <p>Email: {selectedCustomer.email}</p>
-            <p style={{ color: selectedCustomer.twoFactorEnabled ? "red" : "green" }}>
-              Two-Factor Enabled: {selectedCustomer.twoFactorEnabled ? "Yes" : "No"}
-            </p>
-            <button className="btn btn-primary" onClick={handleToggle2FA}>
-              Toggle Two-Factor Authentication
-            </button>
+      <div className="container mt-4 d-flex justify-content-center align-items-center" style={{ marginLeft: "270px", width: "100%", maxWidth: "90%", backdropFilter: "blur(5px)" }}>
+        <div className="w-100" style={{ maxWidth: "600px" }}>
+          <h1 className="mb-4 fw-bold text-center" style={{ fontSize: "2.5rem", color: "rgb(51, 51, 51)" }}>
+            Toggle Two-Factor Authentication
+          </h1>
+          <div className="mb-3">
+            <label style={{ fontWeight: "bold" }}>Select Customer Email:</label>
+            <select
+              className="form-control"
+              value={selectedCustomer ? selectedCustomer.email : ""}
+              onChange={(e) => setSelectedCustomer(customers.find(customer => customer.email === e.target.value))}
+            >
+              <option value="" disabled>Select an email</option>
+              {customers.map(customer => (
+                <option key={customer._id} value={customer.email}>{customer.email}</option>
+              ))}
+            </select>
           </div>
-        )}
+          {selectedCustomer && (
+            <div className="card p-3 mx-auto" style={{ backgroundColor: "#f8f9fa", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", borderRadius: "10px", maxWidth: "600px" }}>
+              <h4 className="fw-bold">Name: {selectedCustomer.name}</h4>
+              <p>Email: {selectedCustomer.email}</p>
+              <p style={{ color: selectedCustomer.twoFactorEnabled ? "red" : "green" }}>
+                Two-Factor Enabled: {selectedCustomer.twoFactorEnabled ? "Yes" : "No"}
+              </p>
+              <button className="btn btn-primary" onClick={handleToggle2FA}>
+                Toggle Two-Factor Authentication
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -119,8 +125,6 @@ function Toggle2FA() {
 
 
 export default Toggle2FA;
-
-
 
 
 
