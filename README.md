@@ -10,6 +10,16 @@ This is a full-stack web application built to streamline inventory control, orde
 </div>
 
 ---
+## Deployed Links
+
+- **Frontend:** [Inventory Hub](https://inventory-hub-fis.netlify.app/)
+- **Backend:** [Inventory Management API](https://inventory-management-rest-api-mongo-db.onrender.com/api/products)
+
+## Base URL
+
+All endpoints are relative to the base URL:
+https://inventory-management-rest-api-mongo-db.onrender.com/api/products
+---
 ## 🚀 Features
 
 ### 🌟 Customer Features
