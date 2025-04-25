@@ -21,7 +21,7 @@ function ForgotPassword() {
     }
 
 
-    axios.post("http://localhost:3000/api/customers/forgot-password", { email }, {
+    axios.post("https://inventory-management-rest-api-mongo-db.onrender.com/api/customers/forgot-password", { email }, {
       headers: {
         Authorization: `Bearer ${jwtToken}`
       }
@@ -41,7 +41,7 @@ function ForgotPassword() {
 
 
   const handleResetPassword = () => {
-    axios.post("http://localhost:3000/api/customers/reset-password", { newPassword, token })
+    axios.post("https://inventory-management-rest-api-mongo-db.onrender.com/api/customers/reset-password", { newPassword, token })
       .then(response => {
         alert("Password reset successfully!");
         setEmail("");
@@ -63,12 +63,12 @@ function ForgotPassword() {
     <div className="d-flex">
       <Background />
       <SideNavbar />
-      <div className="container mt-4" style={{ marginLeft: "270px", width: "60%", backdropFilter: "blur(5px)" }}>
+      <div className="container mt-4 d-flex flex-column align-items-center" style={{ marginLeft: "270px", width: "100%", maxWidth: "90%", backdropFilter: "blur(5px)" }}>
         <h1 className="mb-4 fw-bold text-center" style={{ fontSize: "2rem", color: "rgb(51, 51, 51)" }}>
           {step === 1 ? "Forgot Password" : "Reset Password"}
         </h1>
         {step === 1 ? (
-          <div className="card p-3" style={{ backgroundColor: "#f8f9fa",boxShadow: "0px 4px 8px rgba(28, 139, 230, 0.7)", borderRadius: "10px" }}>
+          <div className="card p-3" style={{ backgroundColor: "#f8f9fa", boxShadow: "0px 4px 8px rgba(28, 139, 230, 0.7)", borderRadius: "10px", width: "100%", maxWidth: "500px" }}>
             <div className="mb-3">
               <label className="form-label"><strong>Email:</strong></label>
               <input
@@ -83,7 +83,7 @@ function ForgotPassword() {
             </button>
           </div>
         ) : (
-          <div className="card p-3" style={{ backgroundColor: "#f8f9fa", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", borderRadius: "10px" }}>
+          <div className="card p-3" style={{ backgroundColor: "#f8f9fa", boxShadow: "0px 4px 8px rgba(28, 139, 230, 0.7)", borderRadius: "10px", width: "100%", maxWidth: "500px" }}>
             <div className="mb-3">
               <label className="form-label"><strong>Token:</strong></label>
               <input
@@ -114,8 +114,6 @@ function ForgotPassword() {
 
 
 export default ForgotPassword;
-
-
 
 
 

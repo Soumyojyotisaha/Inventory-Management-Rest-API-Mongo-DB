@@ -6,7 +6,6 @@ import Background from "../Background";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 
-
 function CustomerDashboard() {
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -15,10 +14,9 @@ function CustomerDashboard() {
   const productsPerPage = 12;
   const navigate = useNavigate();
 
-
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api/products")
+      .get("https://inventory-management-rest-api-mongo-db.onrender.com/api/products")
       .then((response) => {
         setProducts(response.data);
       })
@@ -27,13 +25,11 @@ function CustomerDashboard() {
       });
   }, []);
 
-
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
     product.price >= priceRange[0] &&
     product.price <= priceRange[1]
   );
-
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
@@ -42,13 +38,11 @@ function CustomerDashboard() {
     indexOfLastProduct
   );
 
-
   const nextPage = () => {
     if (indexOfLastProduct < filteredProducts.length) {
       setCurrentPage(currentPage + 1);
     }
   };
-
 
   const prevPage = () => {
     if (currentPage > 1) {
@@ -56,11 +50,9 @@ function CustomerDashboard() {
     }
   };
 
-
   const handleLogout = async () => {
     try {
-      const token = localStorage.getItem("customer-jwt");
-
+      const token = localStorage.getItem("customer-jwtToken");
 
       if (!token) {
         console.error("No token found, redirecting to login page.");
@@ -69,9 +61,8 @@ function CustomerDashboard() {
         return;
       }
 
-
       await axios.post(
-        "http://localhost:3000/api/customers/logout",
+        "https://inventory-management-rest-api-mongo-db.onrender.com/api/customers/logout",
         {},
         {
           headers: {
@@ -80,8 +71,7 @@ function CustomerDashboard() {
         }
       );
 
-
-      localStorage.removeItem("customer-jwt");
+      localStorage.removeItem("customer-jwtToken");
       alert("You have been logged out successfully!");
       navigate("/customer-login");
     } catch (error) {
@@ -90,18 +80,15 @@ function CustomerDashboard() {
     }
   };
 
-
   return (
     <div className="d-flex">
       <Background />
       <SideNavbar handleLogout={handleLogout} />
 
-
       <div className="container mt-4" style={{ marginLeft: "270px", width: "80%", backdropFilter: "blur(5px)" }}>
-        <h1 className="mb-4 fw-bold text-center" style={{ fontSize: "2.5rem", color: "rgb(51, 51, 51)", background:"white", padding:"15px" }}>
+        <h1 className="mb-4 fw-bold text-center" style={{ fontSize: "2.5rem", color: "rgb(51, 51, 51)", background: "white", padding: "15px" }}>
           Welcome to <span style={{ color: "rgb(0, 123, 255)" }}>Inventory Hub</span>
         </h1>
-
 
         <div className="mb-3">
           <input
@@ -112,7 +99,6 @@ function CustomerDashboard() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-
 
         <div className="mb-3">
           <label>Filter by Price:</label>
@@ -130,7 +116,6 @@ function CustomerDashboard() {
           </div>
         </div>
 
-
         <div className="row">
           {currentProducts.length > 0 ? (
             currentProducts.map((product) => (
@@ -146,7 +131,6 @@ function CustomerDashboard() {
             <p className="text-center">No products found.</p>
           )}
         </div>
-
 
         <div className="d-flex justify-content-between align-items-center mt-3">
           <button className="btn btn-sm btn-primary mx-5" onClick={prevPage} disabled={currentPage === 1}>
@@ -164,10 +148,4 @@ function CustomerDashboard() {
   );
 }
 
-
 export default CustomerDashboard;
-
-
-
-
-

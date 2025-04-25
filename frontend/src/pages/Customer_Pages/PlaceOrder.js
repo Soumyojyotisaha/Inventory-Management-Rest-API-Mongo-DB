@@ -5,7 +5,6 @@ import Background from "../Background";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 
-
 function PlaceOrder() {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -17,10 +16,9 @@ function PlaceOrder() {
   const [priceRange, setPriceRange] = useState([0, 1000]); // Adjust the range as needed
   const productsPerPage = 9;
 
-
   useEffect(() => {
     // Fetch available products
-    axios.get("http://localhost:3000/api/products")
+    axios.get("https://inventory-management-rest-api-mongo-db.onrender.com/api/products")
       .then(response => {
         setProducts(response.data);
       })
@@ -29,13 +27,16 @@ function PlaceOrder() {
       });
   }, []);
 
-
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
 
-
   const handleSelectProduct = (product) => {
+    if (quantity <= 0) {
+      alert("Quantity must be greater than 0.");
+      return;
+    }
+
     const existingProduct = selectedProducts.find(p => p.product === product._id);
     if (existingProduct) {
       setSelectedProducts(selectedProducts.map(p =>
@@ -48,23 +49,28 @@ function PlaceOrder() {
     setTimeout(() => setPopupMessage(""), 3000); // Hide popup after 3 seconds
   };
 
-
   const handlePlaceOrder = () => {
     const token = localStorage.getItem("customer-jwtToken");
-
 
     if (!token) {
       console.error("No token found in localStorage");
       alert("You need to log in to place an order.");
-      window.location.href = "http://localhost:4000/customer-login";
+      window.location.href = "/customer-login";
       return;
     }
 
+    if (selectedProducts.length === 0) {
+      alert("Please add at least one product to your cart before placing an order.");
+      return;
+    }
 
-    console.log("JWT Token:", token); // Print the token to the console
+    const invalidProduct = selectedProducts.find(product => product.quantity <= 0);
+    if (invalidProduct) {
+      alert(`Invalid quantity for product: ${invalidProduct.name}. Quantity must be greater than 0.`);
+      return;
+    }
 
-
-    axios.post("http://localhost:3000/api/orders", { products: selectedProducts }, {
+    axios.post("https://inventory-management-rest-api-mongo-db.onrender.com/api/orders", { products: selectedProducts }, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -84,18 +90,15 @@ function PlaceOrder() {
     });
   };
 
-
   const filteredProducts = products.filter(product =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
     product.price >= priceRange[0] &&
     product.price <= priceRange[1]
   );
 
-
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
-
 
   const nextPage = () => {
     if (indexOfLastProduct < filteredProducts.length) {
@@ -103,30 +106,26 @@ function PlaceOrder() {
     }
   };
 
-
   const prevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
   };
 
-
   // ✅ Logout Function
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem("customer-jwtToken");
 
-
       if (!token) {
         console.error("No token found, redirecting to login page.");
         alert("You need to log in to log out.");
-        window.location.href = "http://localhost:4000/customer-login";
+        window.location.href = "/customer-login";
         return;
       }
 
-
       await axios.post(
-        "http://localhost:3000/api/customers/logout",
+        "https://inventory-management-rest-api-mongo-db.onrender.com/api/customers/logout",
         {},
         {
           headers: {
@@ -135,21 +134,18 @@ function PlaceOrder() {
         }
       );
 
-
       localStorage.removeItem("customer-jwtToken");
       alert("You have been logged out successfully!");
-      window.location.href = "http://localhost:4000/customer-login";
+      window.location.href = "/customer-login";
     } catch (error) {
       console.error("Logout failed:", error);
     }
   };
 
-
   return (
     <div className="d-flex">
       <Background />
       <SideNavbar handleLogout={handleLogout} />
-
 
       {/* Main Content */}
       <div className="container d-flex flex-column align-items-center" style={{ marginLeft: "270px", width: "80%", backdropFilter: "blur(5px)" }}>
@@ -158,7 +154,7 @@ function PlaceOrder() {
             {popupMessage}
           </div>
         )}
-        <h1 className="mb-4">Place Order</h1>
+        <h1 className="mb-4 fw-bold">Place Order</h1>
         <div className="mb-3 w-50">
           <input
             type="text"
@@ -218,7 +214,7 @@ function PlaceOrder() {
             &rarr;
           </button>
         </div>
-        <button className="btn btn-success w-50 mt-3" onClick={handlePlaceOrder}>
+        <button className="btn btn-success w-50 mt-3 fw-bold" onClick={handlePlaceOrder}>
           Place Order
         </button>
         {orderMessage && (
@@ -231,13 +227,4 @@ function PlaceOrder() {
   );
 }
 
-
 export default PlaceOrder;
-
-
-
-
-
-
-
-

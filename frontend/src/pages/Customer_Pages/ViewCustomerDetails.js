@@ -1,28 +1,24 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-
 function ViewCustomerDetails() {
   const [customer, setCustomer] = useState(null);
   const [error, setError] = useState("");
 
-
   useEffect(() => {
     const fetchCustomerDetails = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("customer-jwtToken");
         if (!token) {
           setError("No token found. Please log in.");
           return;
         }
 
-
-        const response = await axios.get("http://localhost:3000/api/customers/profile", {
+        const response = await axios.get("https://inventory-management-rest-api-mongo-db.onrender.com/api/customers/profile", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-
 
         setCustomer(response.data);
       } catch (error) {
@@ -31,10 +27,8 @@ function ViewCustomerDetails() {
       }
     };
 
-
     fetchCustomerDetails();
   }, []);
-
 
   return (
     <div className="container mt-4">
@@ -56,8 +50,4 @@ function ViewCustomerDetails() {
   );
 }
 
-
 export default ViewCustomerDetails;
-
-
-

@@ -14,7 +14,7 @@ function Login() {
 
 
     try {
-      const response = await axios.post("http://localhost:3000/api/customers/login", {
+      const response = await axios.post("https://inventory-management-rest-api-mongo-db.onrender.com/api/customers/login", {
         email,
         password,
       });
@@ -34,10 +34,15 @@ function Login() {
   };
 
 
+  const handleRedirectToLandingPage = () => {
+    navigate("/");
+  };
+
+
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center" style={{ height: "100vh" }}>
+    <div className="d-flex flex-column justify-content-center align-items-center" style={{ height: "100vh", position: "relative" }}>
       <h1 className="mb-4 fw-bold text-center" style={{ fontSize: "2.5rem", color: "rgb(51, 51, 51)", backgroundColor: "white", padding: "10px", borderRadius: "5px" }}>
-        Welcome to <span style={{ color: "rgb(0, 123, 255)" }}>Inventory Hub</span>
+        Welcome to <span style={{ color: "rgb(0, 123, 255)", cursor: "pointer" }} onClick={handleRedirectToLandingPage}>Inventory Hub</span>
       </h1>
       <div className="card p-4" style={{ width: "500px", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", borderRadius: "10px" }}>
         <h2 className="text-center" style={{ fontSize: "2rem", fontWeight: "bold", color: "rgb(51, 51, 51)" }}>
@@ -66,6 +71,20 @@ function Login() {
           </div>
           <button type="submit" className="btn btn-success w-100">Login</button>
         </form>
+      </div>
+
+
+      {/* Footer */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "10px",
+          left: "10px",
+          color: "black",
+          fontSize: "0.9rem",
+        }}
+      >
+        Made by Soumyojyoti Saha
       </div>
     </div>
   );
