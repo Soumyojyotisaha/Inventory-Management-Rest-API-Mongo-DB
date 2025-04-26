@@ -20,20 +20,19 @@ function CancelOrder() {
       return;
     }
 
-    axios.get("https://inventory-management-rest-api-mongo-db.onrender.com/api/orders/customer", {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    .then(response => {
-      console.log("Orders fetched:", response.data); // Log the response data
-      // Sort orders by date (most recent first)
-      const sortedOrders = response.data.orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      setOrders(sortedOrders);
-    })
-    .catch(error => {
-      console.error("Error fetching orders:", error);
-    });
+    axios
+      .get("https://inventory-management-rest-api-mongo-db.onrender.com/api/orders/customer", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Orders fetched:", response.data); // Log the response data
+        setOrders(response.data.orders); // Update to correctly handle the API response
+      })
+      .catch((error) => {
+        console.error("Error fetching orders:", error);
+      });
   }, [navigate]);
 
   const handleCancelOrder = (orderId) => {
@@ -45,24 +44,26 @@ function CancelOrder() {
       return;
     }
 
-    axios.delete(`https://inventory-management-rest-api-mongo-db.onrender.com/api/orders/${orderId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    .then(response => {
-      setCancelMessage(`Order cancelled successfully!`);
-      setOrders(orders.filter(order => order._id !== orderId));
-      setPopupMessage(`Order ID: ${orderId} cancelled successfully!`);
-      setTimeout(() => setPopupMessage(""), 3000); // Hide popup after 3 seconds
-    })
-    .catch(error => {
-      console.error("Error cancelling order:", error);
-      const errorMessage = error.response && error.response.data && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-      alert(`Failed to cancel order. Error: ${errorMessage}`);
-    });
+    axios
+      .delete(`https://inventory-management-rest-api-mongo-db.onrender.com/api/orders/${orderId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setCancelMessage(`Order cancelled successfully!`);
+        setOrders(orders.filter((order) => order._id !== orderId));
+        setPopupMessage(`Order ID: ${orderId} cancelled successfully!`);
+        setTimeout(() => setPopupMessage(""), 3000); // Hide popup after 3 seconds
+      })
+      .catch((error) => {
+        console.error("Error cancelling order:", error);
+        const errorMessage =
+          error.response && error.response.data && error.response.data.message
+            ? error.response.data.message
+            : error.message;
+        alert(`Failed to cancel order. Error: ${errorMessage}`);
+      });
   };
 
   // ✅ Logout Function
@@ -115,14 +116,12 @@ function CancelOrder() {
               <div key={order._id} className="col-md-4 mb-4">
                 <div className="card p-3" style={{ backgroundColor: "#f8f9fa", boxShadow: "0px 4px 8px rgba(28, 139, 230, 0.7)", borderRadius: "10px" }}>
                   <h4 className="fw-bold">Order ID: {order._id}</h4>
-                  <p><strong>Date:</strong> {new Date(order.createdAt).toLocaleDateString()}</p>
-                  <p><strong>Time:</strong> {new Date(order.createdAt).toLocaleTimeString()}</p>
                   <p>Products:</p>
                   <ul>
                     {order.products.map((product) => (
                       <li key={product._id}>
-                        <strong>Product Name:</strong> {product.product.name}<br />
-                        <strong>Product Price:</strong> ${product.product.price}<br />
+                        <strong>Product Name:</strong> {product.product?.name || "N/A"}<br />
+                        <strong>Product Price:</strong> ${product.product?.price || "N/A"}<br />
                         <strong>Quantity:</strong> {product.quantity}
                       </li>
                     ))}
